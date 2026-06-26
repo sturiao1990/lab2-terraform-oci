@@ -51,6 +51,8 @@ stages:
                 echo "=== Header e footer da chave ==="
                 head -1 $(OCI_KEY_PATH)
                 tail -1 $(OCI_KEY_PATH)
+                echo "=== Linhas ==="
+                wc -l $(OCI_KEY_PATH)
                 echo "=== Validação OpenSSL ==="
                 openssl pkey -in $(OCI_KEY_PATH) -check -noout 2>&1
 
@@ -75,9 +77,6 @@ stages:
               targetType: inline
               workingDirectory: $(WORKING_DIR)
               script: |
-                echo "Tenancy: $TF_VAR_tenancy_ocid"
-                echo "Compartment: $TF_VAR_compartment_ocid"
-                echo "Region: $TF_VAR_region"
                 terraform plan -out=tfplan
                 terraform show -no-color tfplan > plan_output.txt
                 cat plan_output.txt
