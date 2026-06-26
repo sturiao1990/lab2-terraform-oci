@@ -8,7 +8,7 @@ pool:
 
 variables:
   TF_VERSION: "1.7.5"
-  WORKING_DIR: "$(System.DefaultWorkingDirectory)/terraform"
+  WORKING_DIR: "$(System.DefaultWorkingDirectory)"
 
 stages:
 
@@ -40,23 +40,23 @@ stages:
 
           - task: Bash@3
             displayName: "Terraform Init"
-            workingDirectory: $(WORKING_DIR)
             inputs:
               targetType: inline
+              workingDirectory: $(WORKING_DIR)
               script: terraform init
 
           - task: Bash@3
             displayName: "Terraform Plan"
-            workingDirectory: $(WORKING_DIR)
             env:
               TF_VAR_tenancy_ocid:     $(OCI_TENANCY_OCID)
               TF_VAR_user_ocid:        $(OCI_USER_OCID)
               TF_VAR_fingerprint:      $(OCI_FINGERPRINT)
-              TF_VAR_private_key_path: ~/.oci/oci_api_key.pem
+              TF_VAR_private_key_path: $(HOME)/.oci/oci_api_key.pem
               TF_VAR_compartment_ocid: $(OCI_COMPARTMENT_OCID)
               TF_VAR_ssh_public_key:   $(SSH_PUBLIC_KEY)
             inputs:
               targetType: inline
+              workingDirectory: $(WORKING_DIR)
               script: |
                 terraform plan -out=tfplan
                 terraform show -no-color tfplan > plan_output.txt
@@ -118,23 +118,23 @@ stages:
 
           - task: Bash@3
             displayName: "Terraform Init"
-            workingDirectory: $(WORKING_DIR)
             inputs:
               targetType: inline
+              workingDirectory: $(WORKING_DIR)
               script: terraform init
 
           - task: Bash@3
             displayName: "Terraform Apply"
-            workingDirectory: $(WORKING_DIR)
             env:
               TF_VAR_tenancy_ocid:     $(OCI_TENANCY_OCID)
               TF_VAR_user_ocid:        $(OCI_USER_OCID)
               TF_VAR_fingerprint:      $(OCI_FINGERPRINT)
-              TF_VAR_private_key_path: ~/.oci/oci_api_key.pem
+              TF_VAR_private_key_path: $(HOME)/.oci/oci_api_key.pem
               TF_VAR_compartment_ocid: $(OCI_COMPARTMENT_OCID)
               TF_VAR_ssh_public_key:   $(SSH_PUBLIC_KEY)
             inputs:
               targetType: inline
+              workingDirectory: $(WORKING_DIR)
               script: |
                 terraform apply -auto-approve \
                   $(Pipeline.Workspace)/tfplan/tfplan
