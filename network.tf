@@ -34,9 +34,12 @@ resource "oci_core_security_list" "main" {
   display_name   = "sl-labpipeline"
 
   ingress_security_rules {
-    protocol = "6" # TCP
+    protocol = "6"
     source   = "0.0.0.0/0"
-    tcp_options { min = 22 max = 22 }
+    tcp_options {
+      min = 22
+      max = 22
+    }
   }
 
   egress_security_rules {
@@ -62,6 +65,16 @@ resource "oci_core_subnet" "database" {
   cidr_block        = "10.0.2.0/24"
   display_name      = "subnet-database"
   dns_label         = "database"
+  route_table_id    = oci_core_route_table.public.id
+  security_list_ids = [oci_core_security_list.main.id]
+}
+
+resource "oci_core_subnet" "mgmt" {
+  compartment_id    = var.compartment_ocid
+  vcn_id            = oci_core_vcn.main.id
+  cidr_block        = "10.0.3.0/24"
+  display_name      = "subnet-mgmt"
+  dns_label         = "mgmt"
   route_table_id    = oci_core_route_table.public.id
   security_list_ids = [oci_core_security_list.main.id]
 }
