@@ -32,11 +32,13 @@ stages:
 
           - task: Bash@3
             displayName: "Escrever e validar chave privada OCI"
+            env:
+              OCI_PRIVATE_KEY: $(OCI_PRIVATE_KEY)
             inputs:
               targetType: inline
               script: |
                 mkdir -p /home/vsts/.oci
-                echo "$(OCI_PRIVATE_KEY)" | base64 -d > $(OCI_KEY_PATH)
+                echo "$OCI_PRIVATE_KEY" | base64 -d > $(OCI_KEY_PATH)
                 chmod 600 $(OCI_KEY_PATH)
 
                 echo "=== Linhas no arquivo ==="
@@ -123,11 +125,13 @@ stages:
 
           - task: Bash@3
             displayName: "Escrever chave privada OCI"
+            env:
+              OCI_PRIVATE_KEY: $(OCI_PRIVATE_KEY)
             inputs:
               targetType: inline
               script: |
                 mkdir -p /home/vsts/.oci
-                echo "$(OCI_PRIVATE_KEY)" | base64 -d > $(OCI_KEY_PATH)
+                echo "$OCI_PRIVATE_KEY" | base64 -d > $(OCI_KEY_PATH)
                 chmod 600 $(OCI_KEY_PATH)
 
           - download: current
