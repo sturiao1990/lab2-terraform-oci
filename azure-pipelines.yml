@@ -7,9 +7,13 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  TF_VERSION: "1.7.5"
-  WORKING_DIR: "$(System.DefaultWorkingDirectory)"
-  OCI_KEY_PATH: "/home/vsts/.oci/andresturiao.pem"
+  - group: oci-credentials
+  - name: TF_VERSION
+    value: "1.7.5"
+  - name: WORKING_DIR
+    value: "$(System.DefaultWorkingDirectory)"
+  - name: OCI_KEY_PATH
+    value: "/home/vsts/.oci/andresturiao.pem"
 
 stages:
 
@@ -73,7 +77,7 @@ stages:
               script: |
                 echo "Tenancy: $TF_VAR_tenancy_ocid"
                 echo "Compartment: $TF_VAR_compartment_ocid"
-                echo "Fingerprint: $TF_VAR_fingerprint"
+                echo "Region: $TF_VAR_region"
                 terraform plan -out=tfplan
                 terraform show -no-color tfplan > plan_output.txt
                 cat plan_output.txt
