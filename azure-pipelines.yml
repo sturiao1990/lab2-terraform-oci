@@ -30,15 +30,19 @@ stages:
                 unzip -o terraform_$(TF_VERSION)_linux_amd64.zip -d /usr/local/bin/
                 terraform version
 
+          - task: DownloadSecureFile@1
+            displayName: "Baixar chave privada OCI"
+            name: ociKey
+            inputs:
+              secureFile: "andresturiao.pem"
+
           - task: Bash@3
-            displayName: "Escrever e validar chave privada OCI"
-            env:
-              OCI_PRIVATE_KEY: $(OCI_PRIVATE_KEY)
+            displayName: "Instalar e validar chave privada OCI"
             inputs:
               targetType: inline
               script: |
                 mkdir -p /home/vsts/.oci
-                echo "$OCI_PRIVATE_KEY" | base64 -d > $(OCI_KEY_PATH)
+                cp $(ociKey.secureFilePath) $(OCI_KEY_PATH)
                 chmod 600 $(OCI_KEY_PATH)
 
                 echo "=== Linhas no arquivo ==="
@@ -123,15 +127,19 @@ stages:
                 unzip -o terraform_$(TF_VERSION)_linux_amd64.zip -d /usr/local/bin/
                 terraform version
 
+          - task: DownloadSecureFile@1
+            displayName: "Baixar chave privada OCI"
+            name: ociKey
+            inputs:
+              secureFile: "andresturiao.pem"
+
           - task: Bash@3
-            displayName: "Escrever chave privada OCI"
-            env:
-              OCI_PRIVATE_KEY: $(OCI_PRIVATE_KEY)
+            displayName: "Instalar chave privada OCI"
             inputs:
               targetType: inline
               script: |
                 mkdir -p /home/vsts/.oci
-                echo "$OCI_PRIVATE_KEY" | base64 -d > $(OCI_KEY_PATH)
+                cp $(ociKey.secureFilePath) $(OCI_KEY_PATH)
                 chmod 600 $(OCI_KEY_PATH)
 
           - download: current
