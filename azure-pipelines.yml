@@ -107,11 +107,12 @@ stages:
           - task: Bash@3
             displayName: "Escrever chave privada OCI"
             inputs:
-              targetType: inline
-              script: |
-                mkdir -p ~/.oci
-                echo "$(OCI_PRIVATE_KEY)" > ~/.oci/oci_api_key.pem
-                chmod 600 ~/.oci/oci_api_key.pem
+            targetType: inline
+            script: |
+              mkdir -p ~/.oci
+              echo "$(OCI_PRIVATE_KEY)" | base64 -d > ~/.oci/oci_api_key.pem
+              chmod 600 ~/.oci/oci_api_key.pem
+              echo "Linhas no arquivo pem: $(wc -l < ~/.oci/oci_api_key.pem)"
 
           - download: current
             artifact: tfplan
