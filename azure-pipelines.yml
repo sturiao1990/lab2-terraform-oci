@@ -44,17 +44,9 @@ stages:
                 mkdir -p /home/vsts/.oci
                 cp $(ociKey.secureFilePath) $(OCI_KEY_PATH)
                 chmod 600 $(OCI_KEY_PATH)
-
-                echo "=== Linhas no arquivo ==="
-                wc -l $(OCI_KEY_PATH)
-
                 echo "=== Header e footer da chave ==="
                 head -1 $(OCI_KEY_PATH)
                 tail -1 $(OCI_KEY_PATH)
-
-                echo "=== Tamanho em bytes ==="
-                wc -c $(OCI_KEY_PATH)
-
                 echo "=== Validação OpenSSL ==="
                 openssl pkey -in $(OCI_KEY_PATH) -check -noout 2>&1
 
@@ -74,10 +66,14 @@ stages:
               TF_VAR_private_key_path: $(OCI_KEY_PATH)
               TF_VAR_compartment_ocid: $(OCI_COMPARTMENT_OCID)
               TF_VAR_ssh_public_key:   $(SSH_PUBLIC_KEY)
+              TF_VAR_region:           $(OCI_REGION)
             inputs:
               targetType: inline
               workingDirectory: $(WORKING_DIR)
               script: |
+                echo "Tenancy: $TF_VAR_tenancy_ocid"
+                echo "Compartment: $TF_VAR_compartment_ocid"
+                echo "Fingerprint: $TF_VAR_fingerprint"
                 terraform plan -out=tfplan
                 terraform show -no-color tfplan > plan_output.txt
                 cat plan_output.txt
@@ -102,7 +98,6 @@ stages:
           - task: ManualValidation@0
             displayName: "Revisar e aprovar o Terraform Plan"
             inputs:
-              notifyUsers: "$(APPROVER_EMAIL)"
               instructions: |
                 Revise o plan gerado na etapa anterior antes de aprovar.
                 O apply irá criar/modificar recursos no compartment labpipeline (sa-saopaulo-1).
@@ -162,6 +157,7 @@ stages:
               TF_VAR_private_key_path: $(OCI_KEY_PATH)
               TF_VAR_compartment_ocid: $(OCI_COMPARTMENT_OCID)
               TF_VAR_ssh_public_key:   $(SSH_PUBLIC_KEY)
+              TF_VAR_region:           $(OCI_REGION)
             inputs:
               targetType: inline
               workingDirectory: $(WORKING_DIR)
