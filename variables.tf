@@ -23,22 +23,22 @@ variable "shape_catalog" {
   }))
   default = {
     "1ocpu_8gb" = {
-      shape         = "VM.Standard.E4.Flex"
+      shape         = "VM.Standard.A1.Flex"
       ocpus         = 1
       memory_in_gbs = 8
     }
     "2ocpu_16gb" = {
-      shape         = "VM.Standard.E4.Flex"
+      shape         = "VM.Standard.A1.Flex"
       ocpus         = 2
       memory_in_gbs = 16
     }
     "4ocpu_32gb" = {
-      shape         = "VM.Standard.E4.Flex"
+      shape         = "VM.Standard.A1.Flex"
       ocpus         = 4
       memory_in_gbs = 32
     }
     "8ocpu_64gb" = {
-      shape         = "VM.Standard.E4.Flex"
+      shape         = "VM.Standard.A1.Flex"
       ocpus         = 8
       memory_in_gbs = 64
     }
