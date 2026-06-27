@@ -13,10 +13,10 @@ resource "oci_core_instance" "vm" {
   }
 
   source_details {
-    source_type             = "image"
-    source_id               = local.vm_images[each.key]
-    boot_volume_size_in_gbs = each.value.boot_volume
-  }
+  source_type             = "image"
+  source_id               = data.oci_core_images.oracle_linux.images[0].id
+  boot_volume_size_in_gbs = "50"
+}
 
   create_vnic_details {
     subnet_id        = local.vm_subnets[each.key]
