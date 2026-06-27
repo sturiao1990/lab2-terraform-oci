@@ -49,7 +49,7 @@ variable "shape_catalog" {
 variable "image_catalog" {
   type = map(string)
   default = {
-    "ol9"     = "ocid1.image.oc1.sa-saopaulo-1.aaaaaaaaXXXXXXXXXXXXXXXXXX"
+    "ol9"     = "ocid1.image.oc1.sa-saopaulo-1.aaaaaaaaegchzhtlevyku5o6nqv2j2z3anw2fq2r5lasufys4ei2lw65rkva"
     "ol8"     = "ocid1.image.oc1.sa-saopaulo-1.aaaaaaaaYYYYYYYYYYYYYYYYYY"
     "win2025" = "ocid1.image.oc1.sa-saopaulo-1.aaaaaaaaZZZZZZZZZZZZZZZZZZ"
   }
