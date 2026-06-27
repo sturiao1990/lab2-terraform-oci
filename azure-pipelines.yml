@@ -13,7 +13,7 @@ variables:
   - name: WORKING_DIR
     value: "$(System.DefaultWorkingDirectory)"
   - name: OCI_KEY_PATH
-    value: "/home/vsts/.oci/andresturiao.pem"
+    value: "/home/vsts/.oci/oci_private_key_rsa.pem"
 
 stages:
 
@@ -38,7 +38,7 @@ stages:
             displayName: "Baixar chave privada OCI"
             name: ociKey
             inputs:
-              secureFile: "andresturiao.pem"
+              secureFile: "oci_private_key_rsa.pem"
 
           - task: Bash@3
             displayName: "Instalar e validar chave privada OCI"
@@ -129,7 +129,7 @@ stages:
             displayName: "Baixar chave privada OCI"
             name: ociKey
             inputs:
-              secureFile: "andresturiao.pem"
+              secureFile: "oci_private_key_rsa.pem"
 
           - task: Bash@3
             displayName: "Instalar chave privada OCI"
