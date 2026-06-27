@@ -13,7 +13,7 @@ variables:
   - name: WORKING_DIR
     value: "$(System.DefaultWorkingDirectory)"
   - name: OCI_KEY_PATH
-    value: "/home/vsts/.oci/oci_private_key_rsa.pem"
+    value: "/home/vsts/.oci/andresturiao.pem"
 
 stages:
 
@@ -38,43 +38,39 @@ stages:
             displayName: "Baixar chave privada OCI"
             name: ociKey
             inputs:
-              secureFile: "oci_private_key_rsa.pem"
+              secureFile: "andresturiao.pem"
 
           - task: Bash@3
-            displayName: "Instalar e validar chave privada OCI"
+            displayName: "Instalar chave privada OCI"
             inputs:
               targetType: inline
               script: |
                 mkdir -p /home/vsts/.oci
                 cp $(ociKey.secureFilePath) $(OCI_KEY_PATH)
                 chmod 600 $(OCI_KEY_PATH)
-                echo "=== Header e footer da chave ==="
-                head -1 $(OCI_KEY_PATH)
-                tail -1 $(OCI_KEY_PATH)
-                echo "=== Linhas ==="
-                wc -l $(OCI_KEY_PATH)
-                echo "=== Validação OpenSSL ==="
-                openssl pkey -in $(OCI_KEY_PATH) -check -noout 2>&1
 
           - task: Bash@3
             displayName: "Diagnostico autenticacao OCI"
             env:
-            TF_VAR_fingerprint: $(OCI_FINGERPRINT)
-            TF_VAR_user_ocid:   $(OCI_USER_OCID)
+              TF_VAR_fingerprint: $(OCI_FINGERPRINT)
+              TF_VAR_user_ocid:   $(OCI_USER_OCID)
             inputs:
-            targetType: inline
-            script: |
-              echo "=== Primeira linha da chave no disco ==="
-              head -1 $(OCI_KEY_PATH)
+              targetType: inline
+              script: |
+                echo "=== Primeira linha da chave no disco ==="
+                head -1 $(OCI_KEY_PATH)
 
-              echo "=== Fingerprint da chave no disco ==="
-              openssl rsa -in $(OCI_KEY_PATH) -pubout -outform DER 2>/dev/null | openssl md5 -c
+                echo "=== Fingerprint da chave no disco ==="
+                openssl rsa -in $(OCI_KEY_PATH) -pubout -outform DER 2>/dev/null | openssl md5 -c
 
-              echo "=== Fingerprint na variavel OCI_FINGERPRINT ==="
-              echo "$TF_VAR_fingerprint"
+                echo "=== Fingerprint na variavel OCI_FINGERPRINT ==="
+                echo "$TF_VAR_fingerprint"
 
-              echo "=== User OCID na variavel ==="
-              echo "$TF_VAR_user_ocid"
+                echo "=== User OCID na variavel ==="
+                echo "$TF_VAR_user_ocid"
+
+                echo "=== Validacao OpenSSL ==="
+                openssl rsa -in $(OCI_KEY_PATH) -check -noout 2>&1
 
           - task: Bash@3
             displayName: "Terraform Init"
@@ -149,7 +145,7 @@ stages:
             displayName: "Baixar chave privada OCI"
             name: ociKey
             inputs:
-              secureFile: "oci_private_key_rsa.pem"
+              secureFile: "andresturiao.pem"
 
           - task: Bash@3
             displayName: "Instalar chave privada OCI"
@@ -187,4 +183,3 @@ stages:
               script: |
                 terraform apply -auto-approve \
                   $(Pipeline.Workspace)/tfplan/tfplan
-                  #fim123456
